@@ -1,0 +1,845 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" manufacturer="Sensibo" model="Sky" rpm_xml_version="2.0" minimum_component_engine_version="8.2" xsi:noNamespaceSchemaLocation="racepoint_component_profile.xsd" device_class="HVAC_controller">
+    <notes>
+        You *MUST* assign 'https://home.sensibo.com' to the wire in RacePoint - the 'https://' is very important here.
+        
+        *DONT* change the thermostat address in the data table. 
+        You may enable/disable the features of your unit using the check boxes.
+        1 profile should be placed for each unit you want to control. Data table entries will be added automaticly.
+        
+        You need to generate an API key using your Sensibo account online. Log in here: https://home.sensibo.com/me/api and generate your api key.
+        If you need to find your unit's ID, open Terminal and use the following command (ensuring to put in your acutal api key at the end):
+            > curl "https://home.sensibo.com/api/v2/users/me/pods?apiKey=yourapikeyhere"
+        This will return a json array of all the units on your account. Select the one you want to conrol for the step bellow.
+        
+        Update the state varables in RacePoint. Inspect your Sensibo component, from the 'Show' dropdown box select "State Vairables".
+        Change api_key to your own api key
+        Change unit_id to the id of the unit you wish to control
+        Change ThermostatCurrentSetPointUnits to F or C depending on which units you want to control your unit in.
+        
+        After you upload you can check the state 'ThermostatCurrentName' to see if the units match the zones you have assigned them. This will display the name you have assigned during the seutp on your Sensibo Sky unit.
+        ====================== Change Log ==================
+        Version: 2.0 Change: Initial Release.  Risk: Low Importance: Critical
+    </notes>
+    <control_interfaces preferred="ip">
+        <ip port="443" response_time_length_ms="5000" name_on_component="ETHERNET" protocol="http">
+            <http_header name="Content-Type">application/json</http_header>
+        </ip>
+    </control_interfaces>
+    <media_interfaces>
+        <data name_on_component="LAN">
+            <combined_media>
+                <data_media type="ethernet"></data_media>
+                <control port="443"></control>
+            </combined_media>
+        </data>
+        <internal name_on_component="HVAC Controller">
+            <environmental_media></environmental_media>
+            <resource resource_type="ENV_SINGLE_SETPOINT_HVACCONTROLLER_SOURCE"></resource>
+        </internal>
+    </media_interfaces>
+    <state_variable_list>
+        <state_variable name="api_key" owning_logical_component="HVAC_controller" state_center_type="string" user_editable="yes" state_center_binding="api_key_1" receive_updates_from_state_center="yes" note="Your API Key">change api key</state_variable>
+        <state_variable name="unit_id" owning_logical_component="HVAC_controller" state_center_type="string" user_editable="yes" state_center_binding="unit_id_1" receive_updates_from_state_center="yes" note="ID of the Unit">change unit id</state_variable>
+        <state_variable name="ThermostatCurrentHVACMode" owning_logical_component="HVAC_controller" state_center_type="string" user_editable="no" state_center_binding="ThermostatCurrentHVACMode_1">heat</state_variable>
+        <state_variable name="ThermostatCurrentSetPoint" owning_logical_component="HVAC_controller" state_center_type="integer" user_editable="no" state_center_binding="ThermostatCurrentSetPoint_1">22</state_variable>
+        <state_variable name="ThermostatCurrentFanMode" owning_logical_component="HVAC_controller" state_center_type="string" user_editable="no" state_center_binding="ThermostatCurrentFanMode_1">auto</state_variable>
+        <state_variable name="ThermostatCurrentOperationMode" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="ThermostatCurrentOperationMode_1">false</state_variable>
+        <state_variable name="ThermostatCurrentSwingMode" owning_logical_component="HVAC_controller" state_center_type="string" user_editable="no" state_center_binding="ThermostatCurrentSwingMode_1">rangeFull</state_variable>
+        <state_variable name="ThermostatCurrentSetPointUnits" owning_logical_component="HVAC_controller" state_center_type="string" user_editable="yes" state_center_binding="ThermostatCurrentSetPointUnits_1" note="C or F">C</state_variable>
+        <state_variable name="CurrentFanMode" owning_logical_component="HVAC_controller" state_center_type="string" user_editable="no" state_center_binding="CurrentFanMode_1">quiet</state_variable>
+        <state_variable name="IsThermostatCurrentFanModeOn" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsThermostatCurrentFanModeOn_1">1</state_variable>
+        <state_variable name="IsThermostatCurrentFanModeQuiet" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsThermostatCurrentFanModeQuiet_1">0</state_variable>
+        <state_variable name="IsThermostatCurrentFanModeLow" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsThermostatCurrentFanModeLow_1">0</state_variable>
+        <state_variable name="IsThermostatCurrentFanModeMediumLow" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsThermostatCurrentFanModeMediumLow_1">0</state_variable>
+        <state_variable name="IsThermostatCurrentFanModeMedium" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsThermostatCurrentFanModeMedium_1">0</state_variable>
+        <state_variable name="IsThermostatCurrentFanModeMediumHigh" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsThermostatCurrentFanModeMediumHigh_1">0</state_variable>
+        <state_variable name="IsThermostatCurrentFanModeHigh" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsThermostatCurrentFanModeHigh_1">0</state_variable>
+        <state_variable name="IsThermostatCurrentFanModeAuto" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsThermostatCurrentFanModeAuto_1">0</state_variable>
+        <state_variable name="IsCurrentHVACModeOff" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsCurrentHVACModeOff_1">0</state_variable>
+        <state_variable name="IsCurrentHVACModeAuto" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsCurrentHVACModeAuto_1">0</state_variable>
+        <state_variable name="IsCurrentHVACModeCool" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsCurrentHVACModeCool_1">0</state_variable>
+        <state_variable name="IsCurrentHVACModeHeat" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsCurrentHVACModeHeat_1">1</state_variable>
+        <state_variable name="IsCurrentHVACModeFan" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsCurrentHVACModeFan_1">0</state_variable>
+        <state_variable name="IsCurrentHVACModeDry" owning_logical_component="HVAC_controller" state_center_type="boolean" user_editable="no" state_center_binding="IsCurrentHVACModeDry_1">0</state_variable>
+    </state_variable_list>
+    <logical_component logical_component_name="HVAC_controller">
+        <implementation>
+            <internal name_on_component="HVAC Controller">
+                <action_to_select name="GetUnitStates"></action_to_select>
+            </internal>
+        </implementation>
+        <status_messages>
+            <status_message name="Statuses">
+                <root_object name="none" format="json" matches_required="at_least_one">
+                    <values path="//measurements/temperature" matches_required="at_least_one">
+                        <update state="ThermostatCurrentTemperature_1" type="integer"></update>
+                    </values>
+                    <values path="//measurements/humidity" matches_required="at_least_one">
+                        <update state="ThermostatCurrentHumidity_1" type="integer"></update>
+                    </values>
+                    <values path="//acState/on" matches_required="at_least_one">
+                        <update state="ThermostatCurrentOperationMode_1" type="boolean"></update>
+                        <value_map match_required="yes">
+                            <map key="false">
+                                <update state="ThermostatCurrentHVACMode_1" type="string">off</update>
+                                <update state="IsCurrentHVACModeOff_1" type="boolean">1</update>
+                                <update state="IsCurrentHVACModeAuto_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeCool_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeHeat_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeFan_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeDry_1" type="boolean">0</update>
+                            </map>
+                            <map key="0">
+                                <update state="ThermostatCurrentHVACMode_1" type="string">off</update>
+                                <update state="IsCurrentHVACModeOff_1" type="boolean">1</update>
+                                <update state="IsCurrentHVACModeAuto_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeCool_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeHeat_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeFan_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeDry_1" type="boolean">0</update>
+                            </map>
+                            <map key="true">
+                                <update state="IsCurrentHVACModeOff_1" type="boolean">0</update>
+                            </map>
+                            <map key="1">
+                                <update state="IsCurrentHVACModeOff_1" type="boolean">0</update>
+                            </map>
+                        </value_map>
+                    </values>
+                    <values path="//acState/mode" matches_required="at_least_one">
+                        <update state="ThermostatCurrentHVACMode_1" type="string"></update>
+                        <value_map match_required="yes">
+                            <map key="cool">
+                                <update state="IsCurrentHVACModeAuto_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeCool_1" type="boolean">1</update>
+                                <update state="IsCurrentHVACModeHeat_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeFan_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeDry_1" type="boolean">0</update>
+                                <update state="ThermostatCurrentHVACMode_1" type="string">cool</update>
+                            </map>
+                            <map key="heat">
+                                <update state="IsCurrentHVACModeAuto_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeCool_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeHeat_1" type="boolean">1</update>
+                                <update state="IsCurrentHVACModeFan_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeDry_1" type="boolean">0</update>
+                                <update state="ThermostatCurrentHVACMode_1" type="string">heat</update>
+                            </map>
+                            <map key="fan">
+                                <update state="IsCurrentHVACModeAuto_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeCool_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeHeat_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeFan_1" type="boolean">1</update>
+                                <update state="IsCurrentHVACModeDry_1" type="boolean">0</update>
+                                <update state="ThermostatCurrentHVACMode_1" type="string">fan</update>
+                            </map>
+                            <map key="auto">
+                                <update state="IsCurrentHVACModeAuto_1" type="boolean">1</update>
+                                <update state="IsCurrentHVACModeCool_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeHeat_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeFan_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeDry_1" type="boolean">0</update>
+                                <update state="ThermostatCurrentHVACMode_1" type="string">auto</update>
+                            </map>
+                            <map key="dry">
+                                <update state="IsCurrentHVACModeAuto_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeCool_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeHeat_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeFan_1" type="boolean">0</update>
+                                <update state="IsCurrentHVACModeDry_1" type="boolean">1</update>
+                                <update state="ThermostatCurrentHVACMode_1" type="string">dry</update>
+                            </map>
+                        </value_map>
+                    </values>
+                    <values path="//acState/swing" matches_required="at_least_one">
+                        <update state="ThermostatCurrentSwingMode_1" type="string"></update>
+                        
+                    </values>
+                    <values path="//acState/targetTemperature" matches_required="at_least_one">
+                        <update state="ThermostatCurrentSetPoint_1" type="integer"></update>
+                        
+                    </values>
+                    <values path="//acState/fanLevel" matches_required="at_least_one">
+                        <update state="ThermostatCurrentFanMode_1" type="string"></update>
+                        <value_map match_required="yes">
+                            <map key="quiet">
+                                <update state="CurrentFanMode_1" type="string">quiet</update>
+                                <update state="IsThermostatCurrentFanModeOn_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeQuiet_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMedium_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeAuto_1" type="boolean">0</update>
+                            </map>
+                            <map key="low">
+                                <update state="CurrentFanMode_1" type="string">low</update>
+                                <update state="IsThermostatCurrentFanModeOn_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeQuiet_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeLow_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeMediumLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMedium_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeAuto_1" type="boolean">0</update>
+                            </map>
+                            <map key="medium_low">
+                                <update state="CurrentFanMode_1" type="string">medium_low</update>
+                                <update state="IsThermostatCurrentFanModeOn_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeQuiet_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumLow_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeMedium_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeAuto_1" type="boolean">0</update>
+                            </map>
+                            <map key="medium">
+                                <update state="CurrentFanMode_1" type="string">medium</update>
+                                <update state="IsThermostatCurrentFanModeOn_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeQuiet_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMedium_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeMediumHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeAuto_1" type="boolean">0</update>
+                            </map>
+                            <map key="medium_high">
+                                <update state="CurrentFanMode_1" type="string">medium_high</update>
+                                <update state="IsThermostatCurrentFanModeOn_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeQuiet_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMedium_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumHigh_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeAuto_1" type="boolean">0</update>
+                            </map>
+                            <map key="high">
+                                <update state="CurrentFanMode_1" type="string">high</update>
+                                <update state="IsThermostatCurrentFanModeOn_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeQuiet_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMedium_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeHigh_1" type="boolean">1</update>
+                                <update state="IsThermostatCurrentFanModeAuto_1" type="boolean">0</update>
+                            </map>
+                            <map key="auto">
+                                <update state="CurrentFanMode_1" type="string">auto</update>
+                                <update state="IsThermostatCurrentFanModeOn_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeQuiet_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumLow_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMedium_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeMediumHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeHigh_1" type="boolean">0</update>
+                                <update state="IsThermostatCurrentFanModeAuto_1" type="boolean">1</update>
+                            </map>
+                        </value_map>
+                    </values>
+                    <values path="//acState/temperatureUnit" matches_required="at_least_one">
+                        <update state="ThermostatCurrentSetPointUnits_1" type="string"></update>
+                    </values>
+                    <values path="//room/name" matches_required="at_least_one">
+                        <update state="ThermostatCurrentName_1" type="string"></update>
+                    </values>
+                </root_object>
+                <run_elements>
+                    <actions>
+                        <action name="ForceStateUpdateOff">
+                            <execute_on_state_variable_condition name="IsCurrentHVACModeOff" test_condition="equal">1</execute_on_state_variable_condition>
+                            <update_state_variable name="IsCurrentHVACModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                            <update_state_variable name="IsCurrentHVACModeCool" update_type="set" update_source="constant">0</update_state_variable>
+                            <update_state_variable name="IsCurrentHVACModeHeat" update_type="set" update_source="constant">0</update_state_variable>
+                            <update_state_variable name="IsCurrentHVACModeFan" update_type="set" update_source="constant">0</update_state_variable>
+                            <update_state_variable name="IsCurrentHVACModeDry" update_type="set" update_source="constant">0</update_state_variable>
+                            <update_state_variable name="ThermostatCurrentHVACMode" update_type="set" update_source="constant">off</update_state_variable>
+                        </action>
+                    </actions>
+                </run_elements>
+            </status_message>
+        </status_messages>
+        <universal_component_actions>
+            <action name="PowerOn"/>
+            <action name="PowerOff"/>
+        </universal_component_actions>
+        <resource_component_actions resource_type="ENV_SINGLE_SETPOINT_HVACCONTROLLER_SOURCE">
+            <action name="SetSingleSetPointTemperature">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <action_argument name="SetPointTemperature" note="Setpoint Value 16 to 30"/>
+                <update_state_variable name="ThermostatCurrentSetPoint" update_type="set" update_source="action_argument">SetPointTemperature</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" action_argument="SetPointTemperature"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetHVACModeDehumidify">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentHVACMode" update_type="set" update_source="constant">dry</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeOff" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeCool" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeHeat" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeFan" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeDry" update_type="set" update_source="constant">1</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetHVACModeCool">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentHVACMode" update_type="set" update_source="constant">cool</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeOff" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeCool" update_type="set" update_source="constant">1</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeHeat" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeFan" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeDry" update_type="set" update_source="constant">0</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetHVACModeHeat">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentHVACMode" update_type="set" update_source="constant">heat</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeOff" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeCool" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeHeat" update_type="set" update_source="constant">1</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeFan" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeDry" update_type="set" update_source="constant">0</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetHVACModeAuto">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentHVACMode" update_type="set" update_source="constant">auto</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeOff" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeAuto" update_type="set" update_source="constant">1</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeCool" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeHeat" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeFan" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeDry" update_type="set" update_source="constant">0</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetHVACModeOff">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="IsCurrentHVACModeOff" update_type="set" update_source="constant">1</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeCool" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeHeat" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeFan" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsCurrentHVACModeDry" update_type="set" update_source="constant">0</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":false,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetFanModeAuto">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentFanMode" update_type="set" update_source="constant">auto</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeOn" update_type="set" update_source="constant">0</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeAuto" update_type="set" update_source="constant">1</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetFanModeOn">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentFanMode" update_type="set" update_source="constant">high</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeOn" update_type="set" update_source="constant">1</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetFanSpeedLow">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentFanMode" update_type="set" update_source="constant">low</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeOn" update_type="set" update_source="constant">1</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetFanSpeedMid">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentFanMode" update_type="set" update_source="constant">medium</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeOn" update_type="set" update_source="constant">1</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetFanSpeedHigh">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentFanMode" update_type="set" update_source="constant">high</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeOn" update_type="set" update_source="constant">1</update_state_variable>
+                <update_state_variable name="IsThermostatCurrentFanModeAuto" update_type="set" update_source="constant">0</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <entity name="Zone" address_components="1" default_address_1="1" max_entities="1">
+                <screen_representation>
+                    <common_unique_identifier name="ThermostatAddress" address_component="1"></common_unique_identifier>
+                </screen_representation>            
+            </entity>
+        </resource_component_actions>
+        <custom_component_actions>
+            <action name="SetSwingStop">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentSwingMode" update_type="set" update_source="constant">stopped</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetSwingFull">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentSwingMode" update_type="set" update_source="constant">rangeFull</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetSwingTop">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentSwingMode" update_type="set" update_source="constant">fixedTop</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetSwingMidTop">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentSwingMode" update_type="set" update_source="constant">fixedMiddleTop</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetSwingMid">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentSwingMode" update_type="set" update_source="constant">fixedMiddle</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetSwingMidBottom">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentSwingMode" update_type="set" update_source="constant">fixedMiddleBottom</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="SetSwingBottom">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <update_state_variable name="ThermostatCurrentSwingMode" update_type="set" update_source="constant">fixedBottom</update_state_variable>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="POST" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">/acStates?apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">{"acState":{"on":true,"mode":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentHVACMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","fanLevel":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentFanMode"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">","targetTemperature":</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPoint"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">,"temperatureUnit":"</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true" state_variable="ThermostatCurrentSetPointUnits"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="true">"}}</parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+            </action>
+            <action name="GetUnitStates">
+                <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
+                <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
+                <command_interface interface="ip">
+                    <command response_required="yes">
+                        <command_string http_request_type="GET" type="character">api/v2/pods/</command_string>
+                        <parameter_list>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="unit_id"></parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false">?fields=measurements,acState,room&amp;apiKey=</parameter>
+                            <parameter parameter_data_type="character" isHttpBody="false" state_variable="api_key"></parameter>
+                        </parameter_list>
+                        <response_codes>
+                            <rspcode type="character" message_name="Success" status="success">200</rspcode>
+                        </response_codes>
+                        <delay ms_delay="100"/>
+                    </command>
+                </command_interface>
+                <execute_on_schedule period_ms="0"></execute_on_schedule>
+                <execute_on_schedule period_ms="60000"></execute_on_schedule>
+            </action>
+        </custom_component_actions>
+    </logical_component>
+</component>
