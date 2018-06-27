@@ -1,3 +1,5 @@
+This profile is created to control any Sensibo (https://sensibo.com) unit that uses Sensibo's API. This has been written to work with the Savant Pro 8 app. Not all featurs of the API are available due to limiting UI design in the Pro 8 app.
+
 You *MUST* assign 'https://home.sensibo.com' to the wire in RacePoint - the 'https://' is very important here.
 
 *DONT* change the thermostat address in the data table. 
