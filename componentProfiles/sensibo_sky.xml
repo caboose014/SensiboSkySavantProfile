@@ -272,7 +272,7 @@
             <action name="SetSingleSetPointTemperature">
                 <action_argument name="ThermostatAddress" note="UID of Sky Unit"/>
                 <action_argument name="ThermostatAddress2" note="Sensibo API Key"/>
-                <action_argument name="SetPointTemperature" note="Setpoint Value 16 to 30"/>
+                <action_argument name="SetPointTemperature" note="Setpoint Value"/>
                 <update_state_variable name="ThermostatCurrentSetPoint" update_type="set" update_source="action_argument">SetPointTemperature</update_state_variable>
                 <command_interface interface="ip">
                     <command response_required="yes">
