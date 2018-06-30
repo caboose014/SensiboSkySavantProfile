@@ -17,3 +17,7 @@ Change unit_id to the id of the unit you wish to control
 Change ThermostatCurrentSetPointUnits to F or C depending on which units you want to control your unit in.
 
 After you upload you can check the state 'ThermostatCurrentName' to see if the units match the zones you have assigned them. This will display the name you have assigned during the seutp on your Sensibo Sky unit.
+
+
+
+If there are feautres or commands you would like added to the profile, please let me know and I'll do my best to get them put in.
