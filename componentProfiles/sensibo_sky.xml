@@ -15,7 +15,6 @@
         Update the state varables in RacePoint. Inspect your Sensibo component, from the 'Show' dropdown box select "State Vairables".
         Change api_key to your own api key
         Change unit_id to the id of the unit you wish to control
-        Change ThermostatCurrentSetPointUnits to F or C depending on which units you want to control your unit in.
         
         After you upload you can check the state 'ThermostatCurrentName' to see if the units match the zones you have assigned them. This will display the name you have assigned during the seutp on your Sensibo Sky unit.
         ====================== Change Log ==================
