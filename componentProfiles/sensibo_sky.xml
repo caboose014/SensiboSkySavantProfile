@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" manufacturer="Sensibo" model="Sky" rpm_xml_version="2.1" minimum_component_engine_version="8.2" xsi:noNamespaceSchemaLocation="racepoint_component_profile.xsd" device_class="HVAC_controller">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" manufacturer="Sensibo" model="Sky" rpm_xml_version="2.2" minimum_component_engine_version="8.2" xsi:noNamespaceSchemaLocation="racepoint_component_profile.xsd" device_class="HVAC_controller">
     <notes>
         You *MUST* assign 'https://home.sensibo.com' to the wire in RacePoint - the 'https://' is very important here.
         
@@ -18,12 +18,14 @@
         
         After you upload you can check the state 'ThermostatCurrentName' to see if the units match the zones you have assigned them. This will display the name you have assigned during the seutp on your Sensibo Sky unit.
         ====================== Change Log ==================
+        Version: 2.2 Change: Added gzip compression headder to allow more requests.  Risk: Low Importance: Critical
         Version: 2.1 Change: Update to convert C to F for current temp.  Risk: Low Importance: Critical
         Version: 2.0 Change: Initial Release.  Risk: Low Importance: Critical
     </notes>
     <control_interfaces preferred="ip">
         <ip port="443" response_time_length_ms="5000" name_on_component="ETHERNET" protocol="http">
             <http_header name="Content-Type">application/json</http_header>
+            <http_header name="Accept-Encoding">gzip</http_header>
         </ip>
     </control_interfaces>
     <media_interfaces>
